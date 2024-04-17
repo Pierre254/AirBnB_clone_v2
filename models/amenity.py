@@ -1,11 +1,9 @@
 #!/usr/bin/python3
 """This is the amenity class"""
-import sqlalchemy
-import os
+from os import getenv
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String
 
 
 class Amenity(BaseModel, Base):
@@ -14,9 +12,8 @@ class Amenity(BaseModel, Base):
         name: input name
     """
     __tablename__ = 'amenities'
-    storage = os.getenv("HBNB_TYPE_STORAGE")
-    if storage == "db":
-        name = Column(String(128), nullable=False)
-
-    else:
-        name = ""
+    name = Column(String(128), nullable=False)
+    if getenv("HBNB_TYPE_STORAGE") == "db":
+        place_amenities = relationship('Place',
+                                       secondary='place_amenity',
+                                       back_populates='amenities')
